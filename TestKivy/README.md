@@ -1,5 +1,6 @@
 # Test kivy
 
+<p align="center"><img src="../Imagenes/image4755.png" width="600px"><p>
 
 Primero crear un entorno virtual:  
 ``
