@@ -15,3 +15,5 @@ Proyecto en Desarrollo
 - Arduino
 - Python
 - Kivy
+
+### Manual de Uso  [aquí](https://github.com/e2innovation/Proyecto1_GD/blob/master/Manual.md).
