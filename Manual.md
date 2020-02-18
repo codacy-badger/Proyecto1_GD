@@ -32,7 +32,7 @@ git remote add zarate https://github.com/eduardo-zarate/Proyecto1_GD.git
 ##### Editar el usuario local
 ```
 git config user.name "<Nombre> <Apellido>"
-git config user.mail " "
+git config user.email "<email>"
 ```
 
 ##### Agregar los cambios en los programas
@@ -63,8 +63,7 @@ Para poder usar *git pull-request* se debe instalar:
 pip3 install git-pull-request
 ```
 ##### En caso de Windows
-Utilizar Windows y crearlo directamente desde la página de [GitHub](https://github.com/)
-
+Utilizar Windows y crearlo directamente desde la página de [GitHub](https://github.com/).
 #### Para Editar el usuario a utilizar
 ``
 git config credential.username "new_username"
