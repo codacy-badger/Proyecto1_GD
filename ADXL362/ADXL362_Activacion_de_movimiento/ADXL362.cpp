@@ -193,6 +193,13 @@ void ADXL362::SetInactivityTime(int16_t act_time){
   }
 
 //FIFO CONTROL
+  void ADXL362::SetFIFO_Temp(bool Enable){
+    SPIwriteBit(REG_FIFO_CONTROL, FIFO_TEMP_bit, Enable);
+  }
+  void ADXL362::SetFIFOMode(byte MODE){
+    SPIwriteBits(REG_FIFO_CONTROL, FIFO_MODE_bit, FIFO_MODE_lenght, MODE);
+  }
+ 
 //FIFO Samples
 
 

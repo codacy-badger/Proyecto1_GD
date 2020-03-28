@@ -188,7 +188,10 @@ public:
   void SetHalfBW(bool Enable);
   void SetExt_Sample(bool Enable);
   void SetODR(byte frecuency);
-    
+
+  //FIFO CONTROL REGISTER
+    void SetFIFO_Temp(bool Enable);
+    void SetFIFOMode(byte MODE);
   //FIFO Samples
  //INTMAP1
  void SetIntLow_IntI(bool Enable); 
