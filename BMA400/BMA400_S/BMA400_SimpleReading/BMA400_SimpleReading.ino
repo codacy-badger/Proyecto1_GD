@@ -27,6 +27,7 @@ void setup()
   delay(1000); 
   if(c == 0x90) // check if SPI comunication is working with WHO_AM_I register
   {
+    Serial.println("BMA400 is online..."); Serial.println(" ");
     aRes = BMA400.getAres(Ascale);                                       // get sensor resolutions, only need to do this once
     BMA400.resetBMA400();                                                // software reset before initialization
     delay(100);      
