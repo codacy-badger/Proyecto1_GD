@@ -17,23 +17,19 @@
  by Brayan Espinoza Garcia
  */ 
 
-#include <Arduino.h>
+#include <Energia.h>
 #include "ADXL362.h"
 #include <SPI.h>
-
-//#define ADXL362_DEBUG
 
 int16_t slaveSelectPin = 10;
 
 ADXL362::ADXL362() {
 }
 
-
 /*
 Function begin()
  Initial SPI setup and soft reset of device
 */
-
 void ADXL362::begin(int16_t chipSelectPin) {
   //Begin SPI Comunicaction
 	slaveSelectPin = chipSelectPin;
@@ -43,6 +39,9 @@ void ADXL362::begin(int16_t chipSelectPin) {
  }
 
 void ADXL362::beginMeasure() {
+  /*
+   * Set ADLX into measurement mode and configures Range and ODR(Sampling)
+   */
   setMeasure(MEASUREMENT_MODE); //Set REG_POWER_CTL into measurement mode
 	setRange(TWO_GEE);            //Set ADLX Range into Two Gees
   SetODR(ONEHUNDRED_HZ);      //Set ORD to 100Hz (Default)
@@ -50,15 +49,31 @@ void ADXL362::beginMeasure() {
 	delay(10);	
 }
 
+//  ADLX362 FUNCTIONS
+void ADXL362::setupDCActivityInterrupt(int16_t threshold, int16_t timeact){
+  SetActivityThreshold(threshold);          // Setup activity threshold
+  SetActivityTime(timeact);                 // Setup activity time
+  SetActEnable(true);                       // Turn-on activity enable
+}
+
+void ADXL362::setupDCInactivityInterrupt(int16_t threshold, int16_t timeinact){
+  // Setup motion and time thresholds
+  SetInactivityThreshold(threshold);          // Setup inactivity threshold
+  SetInactivityTime(timeinact);               // Setup inactivity time
+  SetInactEnable(true);                       // turn on inactivity interrupt
+}
+
 void ADXL362::FreeFallInt(int16_t Inacthreshold, int16_t InacTime){
-  SetInactivityThreshold(Inacthreshold);
-  SetInactivityTime(InacTime);
-  SetInactEnable(true);
-  SetInact_IntI(true);
-  //SetInact_IntII(true);
-  setRange(EIGTH_GEE);            //Set ADLX Range into Two Gees
+  //Set the Free Fall Interruption
+  SetInactivityThreshold(Inacthreshold);  //Set inactivity threshold
+  SetInactivityTime(InacTime);            //Set inactivity Time
+  SetInactEnable(true);                   //Set inac enable
+  SetInact_IntI(true);                    //Set inac interruption in INT1 pin
+  //SetInact_IntII(true);                 //Uncoment to use INT2 Pin
+  setRange(EIGTH_GEE);                    //Set ADLX Range into Two Gees
   }
 
+//  READING DATA FUNCTIONS
 void ADXL362::readXYZTData16(int16_t &XData16, int16_t &YData16, int16_t &ZData16, int16_t &Temperature){
     // Function that reads XYZ axis and temperature with 16bit resolution
     // A burst read of all three axis is required to guarantee all measurements correspond to same sample time
@@ -107,20 +122,6 @@ int16_t ADXL362::readTemp(){
 	//Function that reads 16bit temperature
 	int16_t TEMP = SPIreadTwoRegisters(REG_TEMP_L);
 	return TEMP;
-}
-
-void ADXL362::setupDCActivityInterrupt(int16_t threshold, int16_t timeact){
-	SetActivityThreshold(threshold);          // Setup activity threshold
-	SetActivityTime(timeact);                 // Setup activity time
-  SetActEnable(true);                       // Turn-on activity enable
-}
-
-void ADXL362::setupDCInactivityInterrupt(int16_t threshold, int16_t timeinact){
-	// Setup motion and time thresholds
-  SetInactivityThreshold(threshold);          // Setup inactivity threshold
-  SetInactivityTime(timeinact);               // Setup inactivity time
-  SetInactEnable(true);                       // turn on inactivity interrupt
-	
 }
 
 void ADXL362::checkAllControlRegs(){
@@ -193,6 +194,13 @@ void ADXL362::SetInactivityTime(int16_t act_time){
   }
 
 //FIFO CONTROL
+  void ADXL362::SetFIFO_Temp(bool Enable){
+    SPIwriteBit(REG_FIFO_CONTROL, FIFO_TEMP_bit, Enable);
+  }
+  void ADXL362::SetFIFOMode(byte MODE){
+    SPIwriteBits(REG_FIFO_CONTROL, FIFO_MODE_bit, FIFO_MODE_lenght, MODE);
+  }
+ 
 //FIFO Samples
 
 
@@ -302,6 +310,21 @@ byte ADXL362::SPIreadOneRegister(byte regAddress){
 	return regValue;
 }
 
+int16_t ADXL362::SPIreadTwoRegisters(byte regAddress){
+  int16_t twoRegValue = 0;
+  
+  digitalWrite(slaveSelectPin, LOW);
+  SPI.transfer(READ);  // read instruction
+  SPI.transfer(regAddress);  
+  twoRegValue = SPI.transfer(0x00);
+  twoRegValue = twoRegValue + (SPI.transfer(0x00) << 8);
+  digitalWrite(slaveSelectPin, HIGH);
+
+  return twoRegValue;
+}  
+
+//WRITE
+
 void ADXL362::SPIwriteOneRegister(byte regAddress, byte regValue){
  	digitalWrite(slaveSelectPin, LOW);
 	SPI.transfer(WRITE);  // write instruction
@@ -309,19 +332,6 @@ void ADXL362::SPIwriteOneRegister(byte regAddress, byte regValue){
 	SPI.transfer(regValue);
 	digitalWrite(slaveSelectPin, HIGH);
 }
-
-int16_t ADXL362::SPIreadTwoRegisters(byte regAddress){
-	int16_t twoRegValue = 0;
-  
-	digitalWrite(slaveSelectPin, LOW);
-	SPI.transfer(READ);  // read instruction
-	SPI.transfer(regAddress);  
-	twoRegValue = SPI.transfer(0x00);
-	twoRegValue = twoRegValue + (SPI.transfer(0x00) << 8);
-	digitalWrite(slaveSelectPin, HIGH);
-
-	return twoRegValue;
-}  
 
 void ADXL362::SPIwriteTwoRegisters(byte regAddress, int16_t twoRegValue){
 	byte twoRegValueH = twoRegValue >> 8;

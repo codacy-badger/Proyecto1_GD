@@ -18,7 +18,7 @@ Conecciones:
 */ 
 
 //Incluyendo librerias para comunicación SPI y arduino
-#include <SPI.h>
+//#include <SPI.h>
 #include "ADXL362.h"
 
 //Definiendo pin de interrupcion (Pin P1_3)
