@@ -16,4 +16,7 @@ Proyecto en Desarrollo
 - Python
 - Kivy
 
+
+Test
+
 ### Manual de Uso  [aquí](https://github.com/e2innovation/Proyecto1_GD/blob/master/Manual.md).
