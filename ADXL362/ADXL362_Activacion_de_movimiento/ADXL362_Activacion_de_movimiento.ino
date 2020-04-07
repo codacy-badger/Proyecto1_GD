@@ -1,4 +1,3 @@
-
 /*
 ADXL362_MotionActivatedSleep para el ADXL362 - Micropower 3-axis accelerometer
 Conecciones:
@@ -16,93 +15,85 @@ Conecciones:
    VS     |  3.3v
  
 */ 
+//volatile bool State = false;
 
-//Incluyendo librerias para comunicación SPI y arduino
-//#include <SPI.h>
+//Access to SPI libraries and ADLX362 library
+#include <SPI.h>
 #include "ADXL362.h"
 
-//Definiendo pin de interrupcion (Pin P1_3)
-#define interruptPin P1_3          
-
-//Definiendo la clase ADXL362
+//Creando una clase ADLX362 con nombre x1
 ADXL362 xl;
 
-//Definiendo variables y banderas del sistema
-volatile bool interruptStatus = 0;
-int16_t XValue, YValue, ZValue, Temperature;
+//Variables del programa
+int16_t temp;
+int16_t XValue16, YValue16, ZValue16, Temperature16;
 
+//Definiendo pin de interrupcion (Pin 2_5)
+#define interruptPin P2_5 
 
-void setup(){
-    Serial.begin(9600);      //Iniciando comunicacion serial
-    xl.begin(P2_0);          //Se asigna el pin cs e inicia comunicacion
-    delay(1000);
-    xl.SoftReset();          //Se resetea el acelerometro
-    delay(1000);            
-    xl.setupDCActivityInterrupt(300, 10);    // 300 code activity threshold.  With default ODR = 100Hz, time threshold of 10 results in 0.1 second time threshold
-    xl.setupDCInactivityInterrupt(80, 200);   // 80 code inactivity threshold.  With default ODR = 100Hz, time threshold of 30 results in 2 second time threshold
-    xl.SetAwake_IntI(true);     //Active Awake Interruption
-    xl.SetLinkLopp(Loop_mode);  //Active Loop Mode
-    xl.SetInactReference(true); //Active Inactive Reference Mode
-    xl.SetActReference(true);   //Active Active Reference Mode
-    xl.SetAutosleep(true);      // turn on Autosleep bit
+const int WAKEUP_PIN = 2.1;//2.1
+bool valInterrupt = 0;
 
-    // turn on Measure mode
-    //
-    xl.beginMeasure();                      // DO LAST! enable measurement mode   
-    //xl.checkAllControlRegs();               // check some setup conditions    
-    delay(100);
- 
-    // Setup interrupt function on Arduino
-    pinMode(interruptPin, INPUT);    
-    attachInterrupt(interruptPin, interruptFunction, RISING);  // A high on output of ADXL interrupt means ADXL is awake, and wake up Arduino 
-}
+void setup() {
+  // put your setup code here, to run once:
+ Serial.begin(9600);
+ pinMode( WAKEUP_PIN , OUTPUT); ///XBEE WAKEUP AND SLEEP
+ pinMode(interruptPin,INPUT);
 
-
-
-void loop(){
-  //
-  //  Check ADXL362 interrupt status to determine if it's asleep
-  //
-  interruptStatus = digitalRead(interruptPin);
-
-// if ADXL362 is asleep, call suspend()  
-  if(interruptStatus == 0) { 
-    Serial.print("\nADXL went to sleep - Put Arduino to sleep now \n");
-    digitalWrite(7, LOW);    // Turn off LED as visual indicator of asleep
-    delay(100);
-    suspend();   
-  }
+  xl.begin(P2_0);                 // Set Cs pin and initialize SPI conection 
+  delay(1000);
+  xl.SoftReset(); 
+  delay(1000);            
+  xl.setupDCActivityInterrupt(300, 10);    // 300 code activity threshold.  With default ODR = 100Hz, time threshold of 10 results in 0.1 second time threshold
+  xl.setupDCInactivityInterrupt(80, 200);   // 80 code inactivity threshold.  With default ODR = 100Hz, time threshold of 30 results in 2 second time threshold
+  xl.SetAwake_IntI(true);     //Active Awake Interruption
+  xl.SetLinkLopp(Loop_mode);  //Active Loop Mode
+  xl.SetInactReference(true); //Active Inactive Reference Mode
+  xl.SetActReference(true);   //Active Active Reference Mode
+  xl.SetAutosleep(true);      // turn on Autosleep bit                  
   
-// if ADXL362 is awake, report XYZT data to Serial Monitor
-  else{
-    delay(10);
-    //digitalWrite(7, HIGH);    // Turn on LED as visual indicator of awake
-    wakeup();
-    Serial.println("\nArduino is Awake! \n");
-    xl.setMeasure(MEASUREMENT_MODE);
-    xl.readXYZTData16(XValue, YValue, ZValue, Temperature);  
-    Serial.print("XVALUE=");
-    Serial.print(XValue);   
-    Serial.print("\tYVALUE=");
-    Serial.print(YValue);  
-    Serial.print("\tZVALUE=");
-    Serial.print(ZValue);  
-    Serial.print("\tTEMPERATURE=");
-    Serial.println(Temperature);  
- 
-    delay(100);    
-    interruptStatus = 0;
-  }
-  // give circuit time to settle after wakeup
-  delay(20);
+  xl.beginMeasure();              // Switch ADXL362 to measure mode  
+  delay(100);
+
+  attachInterrupt(interruptPin,interrupt,RISING);
 }
 
-//
+void Read(){
+  
+  xl.readXYZTData16(XValue16, YValue16, ZValue16,Temperature16);
+  //Show values
+  digitalWrite(WAKEUP_PIN ,LOW);
+  Serial.println("Data with 16-bits values:");
+  Serial.print(XValue16);
+  Serial.print(",");
+  Serial.print(YValue16);  
+  Serial.print(",");
+  Serial.print(ZValue16);  
+  Serial.print(",");
+  Serial.println(Temperature16); 
+  
+  sleep(500); // lpm3
+  }
 
-void interruptFunction(){
-  /* Function called if Arduino detects interrupt activity
-   *when rising edge detected on Arduino interrupt
-   */
-  interruptStatus=1;
-  wakeup();       
+void sleepNow(){
+  Serial.print("\nADXL went to sleep - Put MSP to sleep now \n");
+  suspend();   //lpm4
+  }
+
+void interrupt(){
+  wakeup();
+  }
+
+  
+void loop() { 
+  valInterrupt = digitalRead(interruptPin);
+
+  if(valInterrupt == 1){
+    
+    Read();
+    
+    } else{
+    digitalWrite(WAKEUP_PIN ,HIGH);
+    sleepNow();
+      }
 }
