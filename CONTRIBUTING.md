@@ -23,7 +23,6 @@
 git clone git clone https://github.com/e2innovation/Proyecto1_GD.git
 
 ```
-
 ##### Agregar Repositorios
 ```
 git remote add <apellido> https://github.com/<user>/Proyecto1_GD.git
