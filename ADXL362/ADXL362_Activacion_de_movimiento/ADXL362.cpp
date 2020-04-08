@@ -43,7 +43,7 @@ void ADXL362::beginMeasure() {
    * Set ADLX into measurement mode and configures Range and ODR(Sampling)
    */
   setMeasure(MEASUREMENT_MODE); //Set REG_POWER_CTL into measurement mode
-	setRange(TWO_GEE);            //Set ADLX Range into Two Gees
+	setRange(FOUR_GEE);            //Set ADLX Range into Two Gees
   SetODR(ONEHUNDRED_HZ);      //Set ORD to 100Hz (Default)
   //SetODR(TWELVE_HZ);            //Set ODR to 12.5Hz
 	delay(10);	
