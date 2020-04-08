@@ -1,7 +1,7 @@
 
 Al descargar, copiar, instalar o usar el software, usted acepta esta licencia.
 Si no está de acuerdo con esta licencia, no descargue, instale,
-copie o use el software.S
+copie o use el software.
 
 <p align="center"><img src="Imagenes/Logo_Final.png" width="216px"><p>
 
@@ -15,4 +15,4 @@ de autor, esta prohibida su reproducción - distribución parcial ó total sin n
 
 Solo los miembros de la compañia tienen acceso a los archivos durante el periodo de desarrollo del mismo. Al finalizar el proyecto, todos los derechos del desarrollo le pertenecen a la compañía.
 
-Copyright © 2016 - 2020 E2 Innovation SRL - TODOS LOS DERECHOS RESERVADOS
+**Copyright © 2016 - 2020 E2 Innovation SRL** - TODOS LOS DERECHOS RESERVADOS
