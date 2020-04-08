@@ -5,7 +5,7 @@ copie o use el software.S
 
 <p align="center"><img src="Imagenes/Logo_Final.png" width="216px"><p>
 
-<p style="text-align: center; font-weight: bolder;" >
+<p align="center" style="font-weight: bolder;" >
                         License Agreement <br>
                           For Project1_GD <br>
 <p>
