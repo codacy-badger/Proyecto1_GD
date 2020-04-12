@@ -14,4 +14,6 @@ de autor, esta prohibida su reproducción - distribución parcial ó total sin n
 
 Solo los miembros de la compañia tienen acceso a los archivos durante el periodo de desarrollo del mismo. Al finalizar el proyecto, todos los derechos del desarrollo le pertenecen a la compañía.
 
-**Copyright © 2016 - 2020 E2 Innovation SRL** - TODOS LOS DERECHOS RESERVADOS
+<p align="center" style="font-weight: bolder;" >
+<strong>Copyright © 2016 - 2020 E2 Innovation SRL</strong> - TODOS LOS DERECHOS RESERVADOS
+<p>
