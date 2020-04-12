@@ -1,9 +1,8 @@
-<p align="center"><img src="Imagenes/Logo_Final.png" width="216px"><p>
+<p align="center"><img src="./Sources/imagenes/Logo_Final.png" width="216px"><p>
 
 # Pautas de contribuyente
 
 ## Como contribuir:
-==========================================
 
 1. Primero se debe seguir (*fork*) el repositorio principal, esto creará una copia en el repositorio personal.
 2. Después se debe crear un *Issue* con la descripción de la modificación que se desea agregar o tomar un *Issue*, si este ya ha sido creado anteriormente. Al momento de que este *Issue* se crea, se le asigna un número de Referencia.
@@ -18,17 +17,23 @@
 
 ## Extras
 
+![](https://nvie.com/img/git-model@2x.png)
+
 ##### Clonar el repositorio principal
 ```
 git clone git clone https://github.com/e2innovation/Proyecto1_GD.git
 
 ```
-##### Agregar Repositorios
+##### Agregar Repositorios remotos
 ```
 git remote add <apellido> https://github.com/<user>/Proyecto1_GD.git
-#Para ver los repositorios agregados
+```
+Para ver los repositorios agregados
+```
 git remote -v
-#Ejemplo
+```
+Ejemplo:
+```
 git remote add zarate https://github.com/eduardo-zarate/Proyecto1_GD.git
 
 ```

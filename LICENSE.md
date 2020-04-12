@@ -1,4 +1,3 @@
-
 Al descargar, copiar, instalar o usar el software, usted acepta esta licencia.
 Si no está de acuerdo con esta licencia, no descargue, instale,
 copie o use el software.S
