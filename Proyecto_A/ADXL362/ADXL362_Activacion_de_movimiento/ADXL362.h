@@ -1,21 +1,21 @@
 /*
  Arduino Library for Analog Devices ADXL362 - Micropower 3-axis accelerometer
  go to http://www.analog.com/ADXL362 for datasheet
- 
- 
- License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free 
+
+
+ License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free
  to use and abuse this code however you'd like. If you find it useful
  please attribute, and SHARE-ALIKE!
- 
+
  Created June 2012
  by Anne Mahaffey - hosted on http://annem.github.com/ADXL362
- 
+
  Modified May 2013
  by Jonathan Ruiz de Garibay
 
  Modified Mach 2020
  by Brayan Espinoza Garcia
- */ 
+ */
 
 #include <Arduino.h>
 
@@ -26,7 +26,7 @@
 #define REG_DEVID_AD    0x00  //Contains the number 0xAD
 #define REG_DEVID_MST   0x01  //Contains the number 0x1D
 #define REG_PARTID      0X02  //Contains the number 0xF2
-#define REG_REVID       0X03  //Contains the product revision 
+#define REG_REVID       0X03  //Contains the product revision
 #define REG_XDATA       0X08  //8 most-significant bits of X-axis
 #define REG_YDATA       0X09  //8 most-significant bits of Y-axis
 #define REG_ZDATA       0X0A  //8 most-significant bits of Z-axis
@@ -60,7 +60,7 @@
 #define FIFO_READY 1       //(1= AT LEAST ONE SAMPLE AVAIABLE)
 #define DATA_READY 0       //(1= NEW VALID SAMPLES  IS AVAIBLE TO BE READ)
 
-#define Soft_Reset 0x52   
+#define Soft_Reset 0x52
 
 //Activity/ Inactivity Control Register
 #define LINKLOOP_bit 5     //(Default mode: Activity and Inactivity are enable automatic acknoledge)
@@ -75,7 +75,7 @@
 //FIFO_CONTROL
 #define AH_bit 3          //(MSB of FIFO_SAMPLES)
 #define FIFO_TEMP_bit 2   //(1=Temperature sore with X,Y,Z acceleration)
-#define FIFO_MODE_bit 1   
+#define FIFO_MODE_bit 1
 #define FIFO_MODE_lenght 2
   #define FIFO_DISABLED     0
   #define OLDEST_SAVE_MODE  1
@@ -94,14 +94,14 @@
 
 //Filter Control Register
 #define RANGE_bit 7     //Measure Range Selection
-#define RANGE_length 2  
+#define RANGE_length 2
   #define TWO_GEE 0x00
   #define FOUR_GEE 0x01
-  #define EIGTH_GEE 0x03 
+  #define EIGTH_GEE 0x03
 #define HALF_BW_bit 4   //(Bandwidth of anti-aliasing filter set to: 1=1/4 ODR,0= 1/2 ODR)
 #define EXT_SAMPLE_bit 3 //(1=INT2 ->External Conversion Control)
 #define ODR_bit 2
-#define ODR_length 3  
+#define ODR_length 3
   #define TWELVE_HZ 0
   #define TWENTYFIVE_HZ 1
   #define FIFTY_HZ  2
@@ -112,7 +112,7 @@
 //POWER CONTROL REGISTER
 #define EXT_CLK_bit 6     //(1=RUN EXTERNAL CLOCK)
 #define LOW_NOISE_bit 5   //(Selects power vs. noise tradeoff)
-#define LOW_NOISE_length 2 
+#define LOW_NOISE_length 2
   #define NORMAL 0
   #define LOW_NOISE_MODE 1
   #define ULTRA_LOW_NOISE_MODE 2
@@ -136,13 +136,13 @@ class ADXL362
 public:
 
 	ADXL362();
-	
+
 	//
 	// Basic Device control and readback functions
 	                                                                                                                           //
-	void begin(int16_t chipSelectPin = 10); 	
- 	void beginMeasure(); 
-  
+	void begin(int16_t chipSelectPin = 10);
+ 	void beginMeasure();
+
   void FreeFallInt(int16_t Inacthreshold, int16_t InacTime);
 
 	int16_t readXData();
@@ -151,17 +151,17 @@ public:
 	void readXYZTData16(int16_t &XData16, int16_t &YData16, int16_t &ZData16, int16_t &Temperature);
 	void readXYZData8(int8_t &XData8, int8_t &YData8, int8_t &ZData8);
 	int16_t readTemp();
-	
-	
-	
+
+
+
 	//
 	// Activity/Inactivity interrupt functions
 	//
-	void setupDCActivityInterrupt(int16_t threshold, int16_t time);	
+	void setupDCActivityInterrupt(int16_t threshold, int16_t time);
 	void setupDCInactivityInterrupt(int16_t threshold, int16_t time);
   //void setupACActivityInterrupt(int16_t threshold, byte time);
 	//void setupACInactivityInterrupt(int16_t threshold, int16_t time);
-	
+
 	//Configuration functions
 
  //SOFT_RESET REGISTER
@@ -175,14 +175,14 @@ public:
   void SetInactivityThreshold(int16_t act_threshold);
   //INACTICITY TIME REGISRERS
   void SetInactivityTime(int16_t act_time);
-  
+
   //ACTIVITY INACTIVITY CONTROL
-  void SetLinkLopp(byte mode); 
+  void SetLinkLopp(byte mode);
   void SetInactReference(bool Enable);
   void SetInactEnable(bool Enable);
   void SetActReference(bool Enable);
   void SetActEnable(bool Enable);
-    
+
  //FILTER CONTROL REGISTER
   void setRange(byte range);
   void SetHalfBW(bool Enable);
@@ -194,19 +194,19 @@ public:
     void SetFIFOMode(byte MODE);
   //FIFO Samples
  //INTMAP1
- void SetIntLow_IntI(bool Enable); 
+ void SetIntLow_IntI(bool Enable);
  void SetAwake_IntI(bool Enable);
- void SetInact_IntI(bool Enable); 
+ void SetInact_IntI(bool Enable);
  void SetAct_IntI(bool Enable);
  void SetFifoOverrun_IntI(bool Enable);
  void SetFifoWatermark_IntI(bool Enable);
  void SetFifoReady_IntI(bool Enable);
  void SetDataready_IntI(bool Enable);
-  
+
 //INTMAP2
- void SetIntLow_IntII(bool Enable); 
+ void SetIntLow_IntII(bool Enable);
  void SetAwake_IntII(bool Enable);
- void SetInact_IntII(bool Enable); 
+ void SetInact_IntII(bool Enable);
  void SetAct_IntII(bool Enable);
  void SetFifoOverrun_IntII(bool Enable);
  void SetFifoWatermark_IntII(bool Enable);
@@ -215,9 +215,9 @@ public:
 
   //POWER CONTROL REGISTER
   void setMeasure(byte MEASURE);
-  void SetAutosleep(bool Enable); 
-  void SetWakeup(bool Enable); 
-  void SetLowNoise(byte Noise); 
+  void SetAutosleep(bool Enable);
+  void SetWakeup(bool Enable);
+  void SetLowNoise(byte Noise);
   void SetExt_clk(bool Enable);
 
   //SELF TEST
@@ -228,12 +228,12 @@ public:
 	//		-Activity, Inactivity, Both
 	//		- Referenced, Absolute
 	//		- Free Fall
-	
+
 	//Debug functions
 	void checkAllControlRegs();
-	
 
-	
+
+
 	//  Low-level SPI control, to simplify overall coding
 	byte SPIreadOneRegister(byte regAddress);
 	void SPIwriteOneRegister(byte regAddress, byte regValue);
@@ -244,7 +244,7 @@ public:
 
 
 private:
-	
+
 };
 
 #endif
