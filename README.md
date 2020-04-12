@@ -23,7 +23,7 @@ Aqui incluiremos todos los archivos que aporten documentación al desarrollo, to
 Aqui cada uno puede incluir programas de prueba o borradores dentro de su carpeta correspondiente. Estos programas no pertenecen a la versión final del proyecto.
 
 ### 3. Proyecto A
-Aquí incluiremos todo lo relacionado al desarrollo del Proyecto A, código, fichas técnicas y planos.
+Aquí incluiremos todo lo relacionado al desarrollo del [Proyecto A](./Proyecto_A), código, fichas técnicas y planos.
 
 ### 4. Proyecto B
 Aquí incluiremos todo lo relacionado al desarrollo del Proyecto B, código, fichas técnicas y planos.
@@ -39,6 +39,6 @@ Desarrollo de un Interfaz Gráfico.
 #### Recursos
 Aquí incluiremos principalmente imágenes de apoyo para las descripciones adicionales en los archivos README.md.
 
-###### Extras
+#### Extras
 - Manual de uso [aquí](./Manual.md).
 - Pautas de contribuyente [aquí](./CONTRIBUTING.md).
