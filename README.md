@@ -1,10 +1,12 @@
-<p align="center"><img src="./Sources/imagenes/Logo_Final.png" width="196px"><p>
+<p align="center"><img src="./Recursos/imagenes/Logo_Final.png" width="196px"><p>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![GitHub open issues](https://img.shields.io/github/issues/e2innovation/Proyecto1_GD?style=plastic)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed/e2innovation/Proyecto1_GD?style=plastic)
 ![Open GitHub pull requests](https://img.shields.io/github/issues-pr/e2innovation/Proyecto1_GD?style=plastic)
 ![Closed GitHub pull requests](https://img.shields.io/github/issues-pr-closed/e2innovation/Proyecto1_GD?style=plastic)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg?style=plastic)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg?style=plastic)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7fdadea784e44560885ccfa3d02c0ffc)](https://www.codacy.com/manual/eduardo-zarate/Proyecto1_GD?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=e2innovation/Proyecto1_GD&amp;utm_campaign=Badge_Grade)
@@ -12,7 +14,7 @@
 <!-- ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/e2innovation/Proyecto1_GD) -->
 
 # Proyecto1_GD
-Proyecto en desarrollo. A continuación se describen las carpetas incluidas en el proyecto:
+Proyecto en desarrollo, a continuación se describen las carpetas incluidas en el proyecto:
 
 ## 1. Archivos
 Aqui incluiremos todos los archivos que aporten documentación al desarrollo, todos los archivos con formato *.docx* o *.pdf* dentro de la carpeta correspondiente al proyecto.
@@ -34,7 +36,7 @@ Este proyecto aún no esta definido.
 ## 6. Proyecto GUI
 Desarrollo de un Interfaz Gráfico.
 
-### Sources
+### Recursos
 Aquí incluiremos principalmente imágenes de apoyo para las descripciones adicionales en los archivos README.md.
 
 ##### Extras

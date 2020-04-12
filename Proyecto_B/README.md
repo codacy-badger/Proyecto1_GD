@@ -1,4 +1,4 @@
-<p align="center"><img src="../Sources/imagenes/Logo_Final.png" width="196px"><p>
+<p align="center"><img src="../Sources/Recursos/Logo_Final.png" width="196px"><p>
 
 # Proyecto B
 Proyecto aún sin definirse.

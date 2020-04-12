@@ -1,4 +1,4 @@
-<p align="center"><img src="../Sources/imagenes/Logo_Final.png" width="196px"><p>
+<p align="center"><img src="../Recursos/imagenes/Logo_Final.png" width="196px"><p>
 
 # Proyecto A
 
@@ -16,7 +16,7 @@
 - XBee
 
 #### Sensor x *N*
-![](../Sources/imagenes/flujo.png)
+![](../Recursos/imagenes/flujo.png)
 
 
 ## 1. Fichas Técnicas
@@ -58,11 +58,11 @@ Planos del circuito impreso (PCB).
 
 #### Ubicación de los sensores
 Las medidas de la cavidad donde iría el circuito es de 15mmx7mm y la profundidad es de 20mm.
-<p align="center"><img src="../Sources/imagenes/img_1.png" width="400px"><p>
-<p align="center"><img src="../Sources/imagenes/img_2.png" width="400px"><p>
+<p align="center"><img src="../Recursos/imagenes/img_1.png" width="400px"><p>
+<p align="center"><img src="../Recursos/imagenes/img_2.png" width="400px"><p>
 
 En la siguiente foto se muestra el Xbee3 junto con su antena en una cavidad.
-<p align="center"><img src="../Sources/imagenes/img_3.png" width="400px"><p>
+<p align="center"><img src="../Recursos/imagenes/img_3.png" width="400px"><p>
 
 ##### Sensores
 - [Sensores de Vibración](https://faire-ca-soi-meme.fr/domotique/2018/09/03/test-xiaomi-aqara-vibration-sensor/)

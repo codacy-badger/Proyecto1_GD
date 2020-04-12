@@ -2,7 +2,7 @@ Al descargar, copiar, instalar o usar el software, usted acepta esta licencia.
 Si no está de acuerdo con esta licencia, no descargue, instale,
 copie o use el software.
 
-<p align="center"><img src="Imagenes/Logo_Final.png" width="216px"><p>
+<p align="center"><img src="./Recursos/imagenes/Logo_Final.png" width="216px"><p>
 
 <p align="center" style="font-weight: bolder;" >
                         License Agreement <br>

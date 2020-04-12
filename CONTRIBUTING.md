@@ -1,4 +1,4 @@
-<p align="center"><img src="./Sources/imagenes/Logo_Final.png" width="216px"><p>
+<p align="center"><img src="./Recursos/imagenes/Logo_Final.png" width="216px"><p>
 
 # Pautas de contribuyente
 
