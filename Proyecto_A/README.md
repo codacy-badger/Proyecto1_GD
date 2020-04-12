@@ -18,8 +18,6 @@
 #### Sensor x *N*
 ![](../Sources/imagenes/flujo.png)
 
-#### Coordinador
-![](../Sources/imagenes/coordinador.png)
 
 ## 1. Fichas Técnicas
 En esta carpeta podemos guardar todas las fichas técnicas relacionadas al proyecto.
@@ -28,7 +26,7 @@ En esta carpeta podemos guardar todas las fichas técnicas relacionadas al proye
 En esta carpeta, se debe tener separado los planos mecánicos y eléctricos relacionados al proyecto. Incluir todos los planos sobre un mismo elemento dentro de una carpeta e incluir una descripción breve del contenido en un archivo MarkDown(.md)
 
 #### 1. Mecánicos
-Planos del encapsulado para los elementos electronicos.
+Planos del encapsulado para los elementos electrónicos.
 
 #### 2. Eléctricos
 Planos del circuito impreso (PCB).
@@ -59,7 +57,7 @@ Planos del circuito impreso (PCB).
 - 3: PCB: BMI270 [I2C] + uC + XBee3
 
 #### Ubicación de los sensores
-Las medidas de la cavidad donde iría el circuito son, la profundidad es de 20mm.
+Las medidas de la cavidad donde iría el circuito es de 15mmx7mm y la profundidad es de 20mm.
 <p align="center"><img src="../Sources/imagenes/img_1.png" width="400px"><p>
 <p align="center"><img src="../Sources/imagenes/img_2.png" width="400px"><p>
 
@@ -74,7 +72,7 @@ En la siguiente foto se muestra el Xbee3 junto con su antena en una cavidad.
 - [MIKROE-3149](https://www.mouser.pe/ProductDetail/Mikroe/MIKROE-3149?qs=sGAEpiMZZMve4%2FbfQkoj%252BEPi4ApqHNF8CEaaCJoKqNM%3D)
 - [BMA400](https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf)
 
-##### Baterias
+##### Baterías
 - [Li-Po Battery 3.7V 100mAh](https://es.aliexpress.com/item/4000670261171.html?spm=a2g0o.productlist.0.0.361999f3FETcJP&algo_pvid=44eadfe1-7417-4d6e-ab31-6dcf0ca93a4d&algo_expid=44eadfe1-7417-4d6e-ab31-6dcf0ca93a4d-19&btsid=0ab6d70515831768332806760e5465&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_)
 - [Energizer CR2032](https://data.energizer.com/pdfs/cr2032.pdf)
 
