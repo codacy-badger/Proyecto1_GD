@@ -2,6 +2,17 @@
 
 # Proyecto A
 
+```
+|-- Proyecto_A
+    |-- ADXL362
+    |-- BMA400
+    |-- Fichas_Técnicas
+    |-- Planos
+        |-- Mecánicos
+        |-- Eléctricos
+    |-- XBee
+```
+
 ## Descripción
 
 #### Sensores

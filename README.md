@@ -16,6 +16,24 @@
 # Proyecto1_GD
 Proyecto en desarrollo, a continuación se describen las carpetas incluidas en el proyecto:
 
+```
+Proyecto1_GD
+| .gitignore
+| CONTRIBUTING.md
+| LICENSE.md
+| Manual.md
+| README.md
+|-- Archivos
+|-- PlayGround
+|-- Proyecto_A
+|-- Proyecto_B
+|-- Proyecto_C
+|-- Proyecto_GUI
+|-- Recursos
+    |-- audio
+    |-- imagenes
+```
+
 ### 1. Archivos
 Aqui incluiremos todos los archivos que aporten documentación al desarrollo, todos los archivos con formato *.docx* o *.pdf* dentro de la carpeta correspondiente al proyecto.
 
