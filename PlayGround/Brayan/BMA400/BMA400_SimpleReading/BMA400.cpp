@@ -207,12 +207,16 @@ void BMA400::selfTestBMA400()
 //void BMA400::readBMA400AccelData(int16_t * destination)
 void BMA400::readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16)
 {
-  XData16 = SPIreadOneRegister(BMA400_ACCD_X_LSB);  // Start at XData Reg
-  XData16 = (SPIreadOneRegister(BMA400_ACCD_X_MSB) & 0x0F) << 8 | XData16;
-  YData16 = SPIreadOneRegister(BMA400_ACCD_Y_LSB);  // Start at YData Reg
-  YData16 = (SPIreadOneRegister(BMA400_ACCD_Y_MSB) & 0x0F) << 8 | YData16;
-  ZData16 = SPIreadOneRegister(BMA400_ACCD_Z_LSB);  // Start at ZData Reg
-  ZData16 = (SPIreadOneRegister(BMA400_ACCD_Z_MSB) & 0x0F) << 8 | ZData16;
+  digitalWrite(slaveSelectPin, LOW);
+  SPI.transfer(BMA400_ACCD_X_LSB | 0X80); // Start at XData Reg
+  byte dummybyte = SPI.transfer(0x00);
+  XData16 = SPI.transfer(0x00);
+  XData16 = (SPI.transfer(0x00)&0x0F) << 8 | XData16;  
+  YData16 = SPI.transfer(0x00);
+  YData16 = (SPI.transfer(0x00)&0x0F) << 8 | YData16;  
+  ZData16 = SPI.transfer(0x00);
+  ZData16 = (SPI.transfer(0x00)&0x0F) << 8 | ZData16;  
+  digitalWrite(slaveSelectPin, HIGH);
   if (XData16 > 2047) XData16 += -4096;
   if (YData16 > 2047) YData16 += -4096;
   if (ZData16 > 2047) ZData16 += -4096;
