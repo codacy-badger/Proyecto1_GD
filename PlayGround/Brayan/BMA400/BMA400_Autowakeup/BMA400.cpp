@@ -78,6 +78,12 @@ void BMA400::initBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t 
   SPIwriteOneRegister(BMA400_ACC_CONFIG2, acc_filter << 2);             // set accel filter
 }
 
+void BMA400::SetactivitychangeInt(byte Threshold){
+  SPIwriteOneRegister(BMA400_INT_CONFIG1,1<<4);   // Set change_Activity_Interruption
+  SPIwriteOneRegister(BMA400_ACTCH_CONFIG0,Threshold); //Set threshold 
+  SPIwriteOneRegister(BMA400_ACTCH_CONFIG1,7<<5|0x00); //Enable X,Y,Z axis, set 128 points and data source acc_filt1
+  }
+
 //Set Autolower registers
 
 void BMA400::SetAutolowpowertimeout(uint16_t time_code) {
@@ -203,16 +209,18 @@ void BMA400::selfTestBMA400()
   /* end of self test*/
 }
 
-
-//void BMA400::readBMA400AccelData(int16_t * destination)
 void BMA400::readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16)
 {
-  XData16 = SPIreadOneRegister(BMA400_ACCD_X_LSB);  // Start at XData Reg
-  XData16 = (SPIreadOneRegister(BMA400_ACCD_X_MSB) & 0x0F) << 8 | XData16;
-  YData16 = SPIreadOneRegister(BMA400_ACCD_Y_LSB);  // Start at YData Reg
-  YData16 = (SPIreadOneRegister(BMA400_ACCD_Y_MSB) & 0x0F) << 8 | YData16;
-  ZData16 = SPIreadOneRegister(BMA400_ACCD_Z_LSB);  // Start at ZData Reg
-  ZData16 = (SPIreadOneRegister(BMA400_ACCD_Z_MSB) & 0x0F) << 8 | ZData16;
+    digitalWrite(slaveSelectPin, LOW);
+  SPI.transfer(BMA400_ACCD_X_LSB | 0X80); // Start at XData Reg
+  byte dummybyte = SPI.transfer(0x00);
+  XData16 = SPI.transfer(0x00);
+  XData16 = (SPI.transfer(0x00)&0x0F) << 8 | XData16;  
+  YData16 = SPI.transfer(0x00);
+  YData16 = (SPI.transfer(0x00)&0x0F) << 8 | YData16;  
+  ZData16 = SPI.transfer(0x00);
+  ZData16 = (SPI.transfer(0x00)&0x0F) << 8 | ZData16;  
+  digitalWrite(slaveSelectPin, HIGH);
   if (XData16 > 2047) XData16 += -4096;
   if (YData16 > 2047) YData16 += -4096;
   if (ZData16 > 2047) ZData16 += -4096;

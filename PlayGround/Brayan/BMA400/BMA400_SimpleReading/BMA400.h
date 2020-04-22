@@ -163,7 +163,7 @@ class BMA400
 
   //Autolowpowerfunctions
   void SetAutolowpowertimeout(uint16_t time_code);
-
+  void SetactivitychangeInt(byte Threshold);
   //Basic SPI functions
   byte SPIreadOneRegister(byte regAddress);
   int16_t SPIreadTwoRegisters(byte regAddress);

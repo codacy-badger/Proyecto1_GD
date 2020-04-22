@@ -155,7 +155,7 @@ class BMA400
   void resetBMA400();
   void selfTestBMA400();
   void readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
-  void SetWakeupInterruption();
+  void SetWakeupInterruption(byte threhold);
   int16_t readBMA400TempData();
   void activateNoMotionInterrupt();
   void deactivateNoMotionInterrupt();
@@ -163,7 +163,7 @@ class BMA400
 
   //Autolowpowerfunctions
   void SetAutolowpowertimeout(uint16_t time_code);
-
+  void SetactivitychangeInt(byte Threshold);
   //Basic SPI functions
   byte SPIreadOneRegister(byte regAddress);
   int16_t SPIreadTwoRegisters(byte regAddress);

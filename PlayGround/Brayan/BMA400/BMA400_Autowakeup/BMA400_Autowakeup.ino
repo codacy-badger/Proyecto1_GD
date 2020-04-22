@@ -45,7 +45,7 @@ void setup()
 void Read(){
   BMA400.readBMA400AccelData(ax,ay,az);
   digitalWrite(WAKEUP_PIN ,LOW);
-  Serial.print("a"); Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.println(az);   
+  Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.println(az);   
   }
 /*_____________________________ Fin _____________________________*/
 

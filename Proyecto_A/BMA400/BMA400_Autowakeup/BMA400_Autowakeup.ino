@@ -1,85 +1,75 @@
+/*****************************************************************/
+/****************************** E2I ******************************/
+/*****************************************************************/
+/******************* Programa de Sensor BMA400 *******************/
 #include "BMA400.h"
+/*_____________________________ Fin _____________________________*/
 
-/* Specify sensor parameters (sample rate is twice the bandwidth)
- * choices are:
-      AFS_2G, AFS_4G, AFS_8G, AFS_16G  
-      SR_15_5Hz, SRW_25Hz, SR_50Hz, SR_100Hz, SR_200Hz, SR_400Hz, SR_800Hz 
-      sleep_Mode, lowpower_Mode, normal_Mode 
-      osr0 (lowest power, lowest oversampling,lowest accuracy), osr1, osr2, osr3 (highest power, highest oversampling, highest accuracy)
-      acc_filt1 (variable filter), acc_filt2 (fixed 100 Hz filter), acc_filt_lp (fixed 100 Hz filter, 1 Hz bandwidth)
-*/ 
+/************************ Pin de Int Sen *************************/
 #define interruptPin P2_5 
+/*_____________________________ Fin _____________________________*/
 
+/********************* ACC Sensor Variables **********************/
 uint8_t Ascale = AFS_2G, SR = SR_200Hz, power_Mode = normal_Mode, OSR = osr3, acc_filter = acc_filt1;
-int16_t ax, ay, az;       // variables to hold latest sensor data values 
-const int WAKEUP_PIN = 2.1;
+int16_t ax, ay, az;       
+const int WAKEUP_PIN = P1_3;
+int En=0;
+int FF_en=0;
+int En_z=0;
+int i=0;
 bool valInterrupt = 0;
-
 BMA400 BMA400;
+/*_____________________________ Fin _____________________________*/
 
+/************************* Main Funccion *************************/
 void setup()
 {
-  /* Enable USB UART */
   Serial.begin(9600);
-  
-  /*Begin BMA400*/
   BMA400.begin(P2_0);
-
-      // Read the BMA400 Chip ID register, in order to test of communication
   Serial.println("BMA400 accelerometer...");
-  byte c = BMA400.getChipID();  // Read CHIP_ID register for BMA400
+  byte c = BMA400.getChipID();  
   Serial.print("BMA400 "); Serial.print("I AM "); Serial.print(c, HEX);
   Serial.println(" ");
   delay(1000); 
-
-  if(c == 0x90) // check if all I2C sensors with WHO_AM_I have acknowledged
-  {
+  
+  if(c == 0x90){
    Serial.println("BMA400 is online..."); Serial.println(" ");
+   BMA400.resetBMA400();                                                  
+   BMA400.initBMA400(Ascale, SR, normal_Mode, OSR, acc_filter);           
+   BMA400.SetWakeupInterruption(0x08);     
+   BMA400.SetactivitychangeInt(3);
    
-   //aRes = BMA400.getAres(Ascale);                                       // get sensor resolutions, only need to do this once
-   BMA400.resetBMA400();                                                // software reset before initialization
-   //delay(100);      
-   //BMA400.selfTestBMA400();                                             // perform sensor self test
-   //BMA400.resetBMA400();                                                // software reset before initialization
-   //delay(1000);                                                         // give some time to read the screen
-   //BMA400.CompensationBMA400(Ascale, SR, normal_Mode, OSR, acc_filter, offset); // quickly estimate offset bias in normal mode
-   BMA400.initBMA400(Ascale, SR, normal_Mode, OSR, acc_filter);          // Initialize sensor in desired mode for application 
-   BMA400.SetWakeupInterruption();     
-   attachInterrupt(interruptPin,interrupt,RISING);               
+         
   }
-  else 
-  {
+  else {
   if(c != 0x90) Serial.println(" BMA400 not functioning!");
   }
-  
 }
+/*_____________________________ Fin _____________________________*/
 
+/************************* Main Funccion *************************/
 void Read(){
-  
- BMA400.readBMA400AccelData(ax,ay,az);
-  //Show values
+  BMA400.readBMA400AccelData(ax,ay,az);
+  byte R=BMA400.SPIreadOneRegister(BMA400_INT_STAT_2);  //Show values
+  bool x_en=bitRead(R,0);
+  //bool y_en=bitRead(R,1);
+  bool z_en=bitRead(R,2);
+  if (x_en==1 & z_en==0){En=500;}
+  else{En=0;}
+  //Fall detection
+  if (abs(ax)<100&abs(ay)<100&abs(az)<100){
+    i=i+1;
+    if (i>5){
+    FF_en=500;
+    }
+   }
+  else{i=0;}
   digitalWrite(WAKEUP_PIN ,LOW);
-  //Serial.println("Data with 16-bits values:");
-  Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.println(az);   
+  Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.print(az);Serial.print(",");Serial.print(En);
+  Serial.print(",");Serial.println(FF_en);
+  //Serial.print(x_en);Serial.print(",");Serial.print(y_en);Serial.print(",");Serial.println(z_en);  
   }
-
-void sleepNow(){
-  Serial.print("\nBMA400 went to sleep - Put MSP to sleep now \n");
-  suspend();
-  }
-
-void interrupt(){
-  wakeup();
-  }
-
 void loop() { 
-  valInterrupt = digitalRead(interruptPin);
-  if(valInterrupt == 1){
-    
     Read();
-    
-    } else{
-    digitalWrite(WAKEUP_PIN ,HIGH);
-    sleepNow();
-      }
 }
+/*_____________________________ Fin _____________________________*/
