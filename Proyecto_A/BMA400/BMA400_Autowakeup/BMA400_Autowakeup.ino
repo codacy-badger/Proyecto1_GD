@@ -1,27 +1,38 @@
-/*****************************************************************/
-/****************************** E2I ******************************/
-/*****************************************************************/
-/******************* Programa de Sensor BMA400 *******************/
-#include "BMA400.h"
-/*_____________________________ Fin _____________________________*/
+/* ---------------------------------------------------------------                   
+ *      Programa BMA400: Deteccion de movimiento de pala 
+ * --------------------------------------------------------------
+ * CONECCIONES:
+ *        DEVICE   | MSP430
+ *        -----------------
+ *          MOSI   |  P1.7     
+ *          MISO   |  P1.6
+ *          SCLK   |  P1.5
+ *          CS     |  P2.0
+ *          INT1   |  P1.3 
+ *          GND    |  GND
+ *          VIO    |  3.3v
+ *          VS     |  3.3v 
+ * DESCRIPCION:
+ * Programa capaz de identificar el movimiento circular que realiza la pala
+ * Para que el agoritmo funcione eficientemente deberá tener corregidor de
+ * offset y deteccion de cambio de velocidad
+ */
+#include "BMA400.h"           // Libreria BMA400
+#define interruptPin P2_5     //Pin de interrupcion
 
-/************************ Pin de Int Sen *************************/
-#define interruptPin P2_5 
-/*_____________________________ Fin _____________________________*/
+/*----------------------ACC Sensor Variables-------------------------*/
+uint8_t Ascale = AFS_8G, SR = SR_200Hz, power_Mode = normal_Mode, OSR = osr3, acc_filter = acc_filt1;
+/*---------------------Variables del programa-----------------------*/
+int16_t ax, ay, az;             //Variable de acceleración
+int16_t num=50;                      //Cantidad de muestras promedio
+const int WAKEUP_PIN = P1_3;    //Pin de Wake up
+ //Valores iniciales
+int16_t ax_m=0;
+int16_t ay_m=0;
+int16_t az_m=0;
 
-/********************* ACC Sensor Variables **********************/
-uint8_t Ascale = AFS_2G, SR = SR_200Hz, power_Mode = normal_Mode, OSR = osr3, acc_filter = acc_filt1;
-int16_t ax, ay, az;       
-const int WAKEUP_PIN = P1_3;
-int En=0;
-int FF_en=0;
-int En_z=0;
-int i=0;
-bool valInterrupt = 0;
 BMA400 BMA400;
-/*_____________________________ Fin _____________________________*/
 
-/************************* Main Funccion *************************/
 void setup()
 {
   Serial.begin(9600);
@@ -31,45 +42,43 @@ void setup()
   Serial.print("BMA400 "); Serial.print("I AM "); Serial.print(c, HEX);
   Serial.println(" ");
   delay(1000); 
-  
+
+  //Deteccion de coneccion
   if(c == 0x90){
    Serial.println("BMA400 is online..."); Serial.println(" ");
    BMA400.resetBMA400();                                                  
    BMA400.initBMA400(Ascale, SR, normal_Mode, OSR, acc_filter);           
-   BMA400.SetWakeupInterruption(0x08);     
-   BMA400.SetactivitychangeInt(3);
-   
-         
+   //BMA400.SetWakeupInterruption(0x08);              
   }
   else {
-  if(c != 0x90) Serial.println(" BMA400 not functioning!");
+    if(c != 0x90) Serial.println(" BMA400 not functioning!");
   }
 }
-/*_____________________________ Fin _____________________________*/
 
-/************************* Main Funccion *************************/
-void Read(){
-  BMA400.readBMA400AccelData(ax,ay,az);
-  byte R=BMA400.SPIreadOneRegister(BMA400_INT_STAT_2);  //Show values
-  bool x_en=bitRead(R,0);
-  //bool y_en=bitRead(R,1);
-  bool z_en=bitRead(R,2);
-  if (x_en==1 & z_en==0){En=500;}
-  else{En=0;}
-  //Fall detection
-  if (abs(ax)<100&abs(ay)<100&abs(az)<100){
-    i=i+1;
-    if (i>5){
-    FF_en=500;
+void Read_promedio(int i_max){
+  ax_m=0;
+  ay_m=0;
+  az_m=0;
+  for(int i = 0; i<i_max; i++){
+      BMA400.readBMA400AccelData(ax,ay,az);
+      ax_m=ax_m+ax;
+      ay_m=ay_m+ay;
+      az_m=az_m+az;
     }
-   }
-  else{i=0;}
-  digitalWrite(WAKEUP_PIN ,LOW);
-  Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.print(az);Serial.print(",");Serial.print(En);
-  Serial.print(",");Serial.println(FF_en);
-  //Serial.print(x_en);Serial.print(",");Serial.print(y_en);Serial.print(",");Serial.println(z_en);  
-  }
-void loop() { 
-    Read();
+  //Promedios cada i_max muestras
+  ax_m=ax_m/i_max;
+  ay_m=ay_m/i_max;
+  az_m=az_m/i_max;
+  //Derivada
+  d_ax=ax_m-ax_m_ant;
+  d_ay=ay_m-ay_m_ant;
+  d_az=az_m-az_m_ant;
+  
+  //Serial.print(ax_m);Serial.print(",");Serial.print(ay_m);Serial.print(",");Serial.println(az_m);  
+  //delay(100);
+  //Valores anteriores
+  
 }
-/*_____________________________ Fin _____________________________*/
+void loop() { 
+   Read_promedio(num);
+}

@@ -1,0 +1,13 @@
+clear, clc, close all;
+%Lectura de datos
+datos=xlsread('Promedio7_0db.xlsx');
+%Frecuencia de muestreo
+fs=5*10^3;
+%Frecuencia 
+f=datos(:,1)';
+
+%Datos de magnitud promedio
+mag_adobe=datos(:,2)';
+mag_air=datos(:,4)';
+mag_car=datos(:,6)';
+mag_sal=datos(:,8)';
