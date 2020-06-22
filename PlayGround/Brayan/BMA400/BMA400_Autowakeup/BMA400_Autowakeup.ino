@@ -32,7 +32,7 @@ void setup()
    Serial.println("BMA400 is online..."); Serial.println(" ");
    BMA400.resetBMA400();                                                  
    BMA400.initBMA400(Ascale, SR, normal_Mode, OSR, acc_filter);           
-   BMA400.SetWakeupInterruption();     
+   BMA400.SetWakeupInterruption(0x80);     
    attachInterrupt(interruptPin,interrupt,RISING);               
   }
   else {

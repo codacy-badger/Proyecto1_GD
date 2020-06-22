@@ -151,10 +151,11 @@ class BMA400
   float getAres(uint8_t Ascale);
   uint8_t getChipID();
   void initBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter);
-  void CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset);
+  //void CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset);
   void resetBMA400();
   //void selfTestBMA400();
-  void readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
+  //void readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
+  void readBMA400AccelData(int16_t *BMA400_Data);
   void SetWakeupInterruption();
   int16_t readBMA400TempData();
   void activateNoMotionInterrupt();
@@ -166,15 +167,11 @@ class BMA400
   void SetactivitychangeInt(byte Threshold);
   //Basic SPI functions
   byte SPIreadOneRegister(byte regAddress);
-  int16_t SPIreadTwoRegisters(byte regAddress);
+  void SPIreadRegisters(byte regAddress, byte *data , uint16_t len);
   void SPIwriteOneRegister(byte regAddress, byte regValue);
   void SPIwriteTwoRegisters(byte regAddress, int16_t twoRegValue);
   void SPIwriteBits(byte regAddress, byte bitStart, byte length1, byte data);
   void SPIwriteBit(byte regAddress, byte bitNum, byte data);
-
-
-
-
 
   private:
   uint8_t _intPin1;

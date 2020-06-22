@@ -1,5 +1,5 @@
-/*  BMI270 Library E2I
- *  Modified by: Brayan Espinoza Garcia
+/*  BMI270 Library Copyright E2Innovation
+ *  Created by: Brayan Espinoza Garcia
     May 2020
 */
 
@@ -650,22 +650,15 @@ void BMI270::resetBMI270()
 //  /* end of self test*/
 //}
 //
-void BMI270::readBMI270Data(int16_t &XData16, int16_t &YData16, int16_t &ZData16)
+void BMI270::readBMI270Data(int16_t *BMI270_Data)
 {   
-    //SPIreadRegisters(uint8_t regAddress, uint8_t *data , uint16_t len)
     digitalWrite(BMI270_slaveSelectPin, LOW);
     SPI.transfer(BMI270_DATA8 | 0X80); // Start at XData Reg
     byte dummybyte = SPI.transfer(0x00);
-    XData16 = SPI.transfer(0x00);
-    XData16 = (SPI.transfer(0x00)&0x0F) << 8 | XData16;  
-    YData16 = SPI.transfer(0x00);
-    YData16 = (SPI.transfer(0x00)&0x0F) << 8 | YData16;  
-    ZData16 = SPI.transfer(0x00);
-    ZData16 = (SPI.transfer(0x00)&0x0F) << 8 | ZData16;  
-    digitalWrite(BMI270_slaveSelectPin, HIGH);
-    if (XData16 >= 0x8000) XData16= -((0xFFFF - XData16) + 1);
-    if (YData16 >= 0x8000) YData16= -((0xFFFF - YData16) + 1);
-    if (ZData16 >= 0x8000) ZData16= -((0xFFFF- ZData16) + 1);
+    for (int16_t i = 0; i<12 ; i++){
+      BMI270_Data[i] = SPI.transfer(0x00);
+      BMI270_Data[i] = ((int16_t)SPI.transfer(0x00)) << 8 | BMI270_Data[i];    
+    }
 }
 //
 //

@@ -134,42 +134,42 @@ void BMA400::deactivateNoMotionInterrupt()
 }
 
 
-void BMA400::CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset)
-{
-  Serial.println("hold flat and motionless for bias calibration");
-  delay(5000);
-
-  SPIwriteOneRegister(BMA400_ACC_CONFIG0, 0x80 | OSR << 5 | power_Mode);// set bandwidth to 0.2x sample rate, OSR in low-power mode, power mode
-  delay(2);
-  SPIwriteOneRegister(BMA400_ACC_CONFIG1, Ascale << 6 | OSR << 4 | SR); // set full-scale range, oversampling and sample rate
-  SPIwriteOneRegister(BMA400_ACC_CONFIG2, acc_filter << 2);             // set accel filter
-
-  int16_t temp[3] = {0, 0, 0};
-  int32_t sum[3] = {0, 0, 0};
-
-  for (uint8_t ii = 0; ii < 128; ii++)
-  {
-    readBMA400AccelData(temp[0], temp[1], temp[2]);
-    sum[0] += temp[0];
-    sum[1] += temp[1];
-    sum[2] += temp[2];
-    delay(100);
-  }
-
-  offset[0] = float(sum[0]) / 128.0f;
-  offset[1] = float(sum[1]) / 128.0f;
-  offset[2] = float(sum[2]) / 128.0f;
-  offset[0] *= _aRes;
-  offset[1] *= _aRes;
-  offset[2] *= _aRes;
-  if (offset[2] > +0.5f) offset[2] = offset[2] - 1.0f;
-  if (offset[2] < -0.5f) offset[2] = offset[2] + 1.0f;
-
-  Serial.print("x-axis offset = "); Serial.print(offset[0] * 1000.0f, 1); Serial.println(" mg");
-  Serial.print("y-axis offset = "); Serial.print(offset[1] * 1000.0f, 1); Serial.println(" mg");
-  Serial.print("z-axis offset = "); Serial.print(offset[2] * 1000.0f, 1); Serial.println(" mg");
-  /* end of accel calibration */
-}
+//void BMA400::CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset)
+//{
+//  Serial.println("hold flat and motionless for bias calibration");
+//  delay(5000);
+//
+//  SPIwriteOneRegister(BMA400_ACC_CONFIG0, 0x80 | OSR << 5 | power_Mode);// set bandwidth to 0.2x sample rate, OSR in low-power mode, power mode
+//  delay(2);
+//  SPIwriteOneRegister(BMA400_ACC_CONFIG1, Ascale << 6 | OSR << 4 | SR); // set full-scale range, oversampling and sample rate
+//  SPIwriteOneRegister(BMA400_ACC_CONFIG2, acc_filter << 2);             // set accel filter
+//
+//  int16_t temp[3] = {0, 0, 0};
+//  int32_t sum[3] = {0, 0, 0};
+//
+//  for (uint8_t ii = 0; ii < 128; ii++)
+//  {
+//    readBMA400AccelData(temp[0], temp[1], temp[2]);
+//    sum[0] += temp[0];
+//    sum[1] += temp[1];
+//    sum[2] += temp[2];
+//    delay(100);
+//  }
+//
+//  offset[0] = float(sum[0]) / 128.0f;
+//  offset[1] = float(sum[1]) / 128.0f;
+//  offset[2] = float(sum[2]) / 128.0f;
+//  offset[0] *= _aRes;
+//  offset[1] *= _aRes;
+//  offset[2] *= _aRes;
+//  if (offset[2] > +0.5f) offset[2] = offset[2] - 1.0f;
+//  if (offset[2] < -0.5f) offset[2] = offset[2] + 1.0f;
+//
+//  Serial.print("x-axis offset = "); Serial.print(offset[0] * 1000.0f, 1); Serial.println(" mg");
+//  Serial.print("y-axis offset = "); Serial.print(offset[1] * 1000.0f, 1); Serial.println(" mg");
+//  Serial.print("z-axis offset = "); Serial.print(offset[2] * 1000.0f, 1); Serial.println(" mg");
+//  /* end of accel calibration */
+//}
 
 
 void BMA400::resetBMA400()
@@ -209,21 +209,19 @@ void BMA400::resetBMA400()
 //  /* end of self test*/
 //}
 
-void BMA400::readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16)
+void BMA400::readBMA400AccelData(int16_t *BMA400_Data)
 {
-    digitalWrite(BMA400_slaveSelectPin, LOW);
+  digitalWrite(BMA400_slaveSelectPin, LOW);
   SPI.transfer(BMA400_ACCD_X_LSB | 0X80); // Start at XData Reg
   byte dummybyte = SPI.transfer(0x00);
-  XData16 = SPI.transfer(0x00);
-  XData16 = (SPI.transfer(0x00)&0x0F) << 8 | XData16;  
-  YData16 = SPI.transfer(0x00);
-  YData16 = (SPI.transfer(0x00)&0x0F) << 8 | YData16;  
-  ZData16 = SPI.transfer(0x00);
-  ZData16 = (SPI.transfer(0x00)&0x0F) << 8 | ZData16;  
+  for (uint16_t i = 0; i < 6; i++){
+    BMA400_Data[i] = SPI.transfer(0x00);
+    BMA400_Data[i] =(SPI.transfer(0x00)&0x0F) << 8 | BMA400_Data[i];  
+  }
   digitalWrite(BMA400_slaveSelectPin, HIGH);
-  if (XData16 > 2047) XData16 += -4096;
-  if (YData16 > 2047) YData16 += -4096;
-  if (ZData16 > 2047) ZData16 += -4096;
+  for (uint16_t i = 0; i < 3; i++){
+    if (BMA400_Data[i] > 2047) BMA400_Data[i] += -4096;  
+  }
 }
 
 
@@ -250,28 +248,16 @@ byte BMA400::SPIreadOneRegister(byte regAddress) {
   digitalWrite(BMA400_slaveSelectPin, HIGH);
   return regValue;
 }
-/*
-  void BMA400::SPIreadRegisters(byte regAddress, uint8_t count, uint8_t * dest)
-  {
-  digitalWrite(slaveSelectPin, LOW); // Put Cs bit in low mode
-  SPI.transfer(subAddress);            // Put slave register address in Tx buffer
-  uint8_t i = 0;
-  Wire.requestFrom(address, count);  // Read bytes from slave register address
-  while (Wire.available()) {
-        dest[i++] = Wire.read(); }   // Put read results in the Rx buffer
-  }
-*/
 
-int16_t BMA400::SPIreadTwoRegisters(byte regAddress) {
-  int16_t twoRegValue = 0;
-
+void BMA400::SPIreadRegisters(byte regAddress, byte *data , uint16_t len) {
+  byte dummybyte = 0;
   digitalWrite(BMA400_slaveSelectPin, LOW);
-  SPI.transfer(regAddress);
-  twoRegValue = SPI.transfer(0x00);
-  twoRegValue = twoRegValue + (SPI.transfer(0x00) << 8);
+  SPI.transfer(bitWrite(regAddress, 7, 1));
+  dummybyte = SPI.transfer(0x00);
+  for (uint16_t i = 0;i<len;i++){
+    data[i] = SPI.transfer(0x00);
+  }
   digitalWrite(BMA400_slaveSelectPin, HIGH);
-
-  return twoRegValue;
 }
 
 //WRITE

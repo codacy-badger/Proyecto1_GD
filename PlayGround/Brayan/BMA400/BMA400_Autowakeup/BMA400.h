@@ -155,7 +155,7 @@ class BMA400
   void resetBMA400();
   void selfTestBMA400();
   void readBMA400AccelData(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
-  void SetWakeupInterruption();
+  void SetWakeupInterruption(byte threshold);
   int16_t readBMA400TempData();
   void activateNoMotionInterrupt();
   void deactivateNoMotionInterrupt();

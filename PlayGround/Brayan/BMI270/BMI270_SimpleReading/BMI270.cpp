@@ -1,5 +1,5 @@
-/*  BMI270 Library E2I
- *  Modified by: Brayan Espinoza Garcia
+/*  BMI270 Library Copyright E2Innovation
+ *  Created by: Brayan Espinoza Garcia
     May 2020
 */
 
@@ -7,7 +7,7 @@
 #include "BMI270.h"
 #include <SPI.h>
 
-int16_t slaveSelectPin = 10;
+int16_t BMI270_slaveSelectPin = 10;
 
 //Global file that stores the configuration file of BMI270
 const uint8_t bmi270_config_file[] = {
@@ -451,22 +451,16 @@ BMI270::BMI270() {
 
 void BMI270::begin(int16_t chipSelectPin) {
   //Begin SPI Comunicaction
-  slaveSelectPin = chipSelectPin;
-  pinMode(slaveSelectPin, OUTPUT);
+  BMI270_slaveSelectPin = chipSelectPin;
+  pinMode(BMI270_slaveSelectPin, OUTPUT);
   SPI.begin();
   SPI.setDataMode(SPI_MODE0); //CPHA = CPOL = 0    MODE = 0
-  //delay(100);
-  //resetBMI270();
-  //delay(1000);
-  SPIwriteOneRegister(0x7C,0x00);
-  delay(100);
-  SPIwriteOneRegister(0x59,0x00);
-  SPIwriteRegisters(0x5E, bmi270_config_file , sizeof(bmi270_config_file)); 
-  SPIwriteOneRegister(0x59,0x01);
+  
 }
 
 void BMI270::initBMI270(uint8_t Ascale, uint8_t ODR, uint8_t Accel_OSR, uint8_t acc_filter, uint8_t gyr_bwp, uint8_t gyr_noise_perf, uint8_t gyr_filter_perf, uint8_t ois_range)
 {
+  SPIwriteOneRegister(BMI270_PWR_CONF,0x00); //Advanced power save disabled
   /* Normal mode configuration */
   // Enable Gyroscope, Accelerometer, Temperature
   SPIwriteOneRegister(BMI270_PWR_CTRL,1<<1|1<<2|1<<3);
@@ -477,6 +471,13 @@ void BMI270::initBMI270(uint8_t Ascale, uint8_t ODR, uint8_t Accel_OSR, uint8_t 
   //Set Gyro features
   SPIwriteOneRegister(BMI270_GYR_CONF, gyr_filter_perf <<7 | gyr_noise_perf <<6 | gyr_bwp << 4| ODR); // set gyro parameters
   SPIwriteOneRegister(BMI270_GYR_RANGE,ois_range<<3| ODR);
+
+  SPIwriteOneRegister(BMI270_PWR_CONF,0x00); //Advanced power save disabled
+  delay(100);
+  SPIwriteOneRegister(BMI270_INIT_CTRL,0x00);
+  SPIwriteRegisters(BMI270_INIT_DATA, bmi270_config_file , sizeof(bmi270_config_file)); 
+  SPIwriteOneRegister(BMI270_INIT_CTRL,0x01);
+  delay(3000);
 }
 
 uint8_t BMI270::getChipID()
@@ -492,8 +493,18 @@ uint8_t BMI270::getStatus()
 }
 
 void BMI270::resetBMI270()
-{
+{ //Perform a softreset
   SPIwriteOneRegister(BMI270_CMD, 0xB6); // software reset the BMA400
+  delayMicroseconds(2000); //Delay for 2000ms
+  
+  //resetBMI270();
+  //delay(3000);
+  //SPIwriteOneRegister(BMI270_PWR_CONF,0x00); //Advanced power save disabled
+  //delay(100);
+  //SPIwriteOneRegister(BMI270_INIT_CTRL,0x00);
+  //SPIwriteRegisters(BMI270_INIT_DATA, bmi270_config_file , sizeof(bmi270_config_file)); 
+  //SPIwriteOneRegister(BMI270_INIT_CTRL,0x01);
+  //delay(3000);
 }
 //float  BMA400::getAres(uint8_t Ascale) {
 //  //Get the factor conversion to escale in terms of Gee´s
@@ -649,22 +660,15 @@ void BMI270::resetBMI270()
 //  /* end of self test*/
 //}
 //
-void BMI270::readBMI270Data(int16_t &XData16, int16_t &YData16, int16_t &ZData16)
+void BMI270::readBMI270Data(int16_t *BMI270_Data)
 {   
-    //SPIreadRegisters(uint8_t regAddress, uint8_t *data , uint16_t len)
-    digitalWrite(slaveSelectPin, LOW);
+    digitalWrite(BMI270_slaveSelectPin, LOW);
     SPI.transfer(BMI270_DATA8 | 0X80); // Start at XData Reg
     byte dummybyte = SPI.transfer(0x00);
-    XData16 = SPI.transfer(0x00);
-    XData16 = (SPI.transfer(0x00)&0x0F) << 8 | XData16;  
-    YData16 = SPI.transfer(0x00);
-    YData16 = (SPI.transfer(0x00)&0x0F) << 8 | YData16;  
-    ZData16 = SPI.transfer(0x00);
-    ZData16 = (SPI.transfer(0x00)&0x0F) << 8 | ZData16;  
-    digitalWrite(slaveSelectPin, HIGH);
-    if (XData16 >= 0x8000) XData16= -((0xFFFF - XData16) + 1);
-    if (YData16 >= 0x8000) YData16= -((0xFFFF - YData16) + 1);
-    if (ZData16 >= 0x8000) ZData16= -((0xFFFF- ZData16) + 1);
+    for (int16_t i = 0; i<12 ; i++){
+      BMI270_Data[i] = SPI.transfer(0x00);
+      BMI270_Data[i] = ((int16_t)SPI.transfer(0x00)) << 8 | BMI270_Data[i];    
+    }
 }
 //
 //
@@ -683,24 +687,24 @@ void BMI270::readBMI270Data(int16_t &XData16, int16_t &YData16, int16_t &ZData16
 byte BMI270::SPIreadOneRegister(byte regAddress) {
   byte regValue = 0;
   byte dummybyte = 0;
-  digitalWrite(slaveSelectPin, LOW);
+  digitalWrite(BMI270_slaveSelectPin, LOW);
   //SPI.transfer(READ);  // read instruction
   SPI.transfer(bitWrite(regAddress, 7, 1));
   dummybyte = SPI.transfer(0x00);
   regValue = SPI.transfer(0x00);
-  digitalWrite(slaveSelectPin, HIGH);
+  digitalWrite(BMI270_slaveSelectPin, HIGH);
   return regValue;
 }
 
 void BMI270::SPIreadRegisters(uint8_t regAddress, uint8_t *data , uint16_t len) {
   byte dummybyte = 0;
-  digitalWrite(slaveSelectPin, LOW);
+  digitalWrite(BMI270_slaveSelectPin, LOW);
   SPI.transfer(bitWrite(regAddress, 7, 1));
   dummybyte = SPI.transfer(0x00);
   for (uint16_t i = 0;i<len;i++){
     data[i] = SPI.transfer(0x00);
   }
-  digitalWrite(slaveSelectPin, HIGH);
+  digitalWrite(BMI270_slaveSelectPin, HIGH);
 }
 
 /*
@@ -717,21 +721,21 @@ int16_t BMI270::SPIreadTwoRegisters(byte regAddress) {
 //WRITE
 
 void BMI270::SPIwriteOneRegister(byte regAddress, byte regValue) {
-  digitalWrite(slaveSelectPin, LOW);
+  digitalWrite(BMI270_slaveSelectPin&0x7F, LOW);
   //SPI.transfer(WRITE);  // write instruction
   SPI.transfer(regAddress);
   SPI.transfer(regValue);
-  digitalWrite(slaveSelectPin, HIGH);
+  digitalWrite(BMI270_slaveSelectPin, HIGH);
 }
 
 
 void BMI270::SPIwriteRegisters(byte regAddress, const uint8_t *data, uint16_t len) {
-  digitalWrite(slaveSelectPin, LOW); // Put Cs bit in low mode
+  digitalWrite(BMI270_slaveSelectPin&0x7F, LOW); // Put Cs bit in low mode
   SPI.transfer(regAddress);            // Put slave register address in Tx buffer
   for (uint16_t i = 0; i < len; i++ ){
-    SPI.transfer(data[i]);
+    SPI.transfer((byte)data[i]);
   }
-  digitalWrite(slaveSelectPin, HIGH);
+  digitalWrite(BMI270_slaveSelectPin, HIGH);
 }
 
 

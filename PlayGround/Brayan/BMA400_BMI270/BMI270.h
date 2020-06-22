@@ -178,7 +178,7 @@ class BMI270
   uint8_t getStatus();
   void resetBMI270();
   void initBMI270(uint8_t Ascale, uint8_t ODR, uint8_t Accel_OSR, uint8_t acc_filter, uint8_t gyr_bwp, uint8_t gyr_noise_perf, uint8_t gyr_filter_perf, uint8_t ois_range);
-  void readBMI270Data(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
+  void readBMI270Data(int16_t *BMI270_Data);
  // void CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset);
  // void selfTestBMA400();
  // void SetWakeupInterruption();

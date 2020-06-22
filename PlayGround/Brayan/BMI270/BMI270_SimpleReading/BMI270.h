@@ -109,65 +109,63 @@
 #define BMI270_CMD                  0x7E
 
 //I2c adress
-  #define BMA400_ADDRESS  0x24  // for I2C conections
+  #define BMI270_ADDRESS  0x24  // for I2C conections
 //ACCEL CONIGURATION
   //Accel Auto Full Scale (acc_range)
-    #define AFS_2G           0x00
-    #define AFS_4G           0x01
-    #define AFS_8G           0x02
-    #define AFS_16G          0x03
+    #define BMI270_AFS_2G           0x00
+    #define BMI270_AFS_4G           0x01
+    #define BMI270_AFS_8G           0x02
+    #define BMI270_AFS_16G          0x03
   //Bandwidth parameter (acc_bwp)
   /*Bandwith parameter determines filter configuration
   (acc_filt_perf=1) y promediando par el caso de submuestreo
   (acc_filt_perf=0) 
   */
-    #define osr4_avg1        0x00  
-    #define osr2_avg2        0x01
-    #define norm_avg4        0x02
-    #define cic_avg8         0x03
-    #define res_avg16        0x04
-    #define res_avg32        0x05
-    #define res_avg64        0x06
-    #define res_avg128       0x07
+    #define BMI270_osr4_avg1        0x00  
+    #define BMI270_osr2_avg2        0x01
+    #define BMI270_norm_avg4        0x02
+    #define BMI270_cic_avg8         0x03
+    #define BMI270_res_avg16        0x04
+    #define BMI270_res_avg32        0x05
+    #define BMI270_res_avg64        0x06
+    #define BMI270_res_avg128       0x07
   //Define (acc_filter_perf)
-    #define acc_filt_ulp     0x00 // power optimized
-    #define acc_filt_hp      0x01 // power optimized
+    #define BMI270_acc_filt_ulp     0x00 // power optimized
+    #define BMI270_acc_filt_hp      0x01 // power optimized
 
 //GYRO CONFIGURATION
   //Gyroscope bandwidth (gyr_bwp)
-    #define osr4             0x00  
-    #define osr2             0x01  
-    #define norm             0x02  
-    #define res              0x03
+    #define BMI270_osr4             0x00  
+    #define BMI270_osr2             0x01  
+    #define BMI270_norm             0x02  
+    #define BMI270_res              0x03
   //Gyroscope_noise_perf (gyr_noise_perf)
-    #define gyr_noise_ulp    0x00  
-    #define gyr_noise_hp     0x01  
+    #define BMI270_gyr_noise_ulp    0x00  
+    #define BMI270_gyr_noise_hp     0x01  
   //Gyroscope_filter_perf (gyr_filter_perf)
-    #define gyr_filter_ulp    0x00  
-    #define gyr_filter_hp     0x01  
+    #define BMI270_gyr_filter_ulp    0x00  
+    #define BMI270_gyr_filter_hp     0x01  
   //ois_range
-    #define range_252         0x00
-    #define range_2000        0x01
+    #define BMI270_range_252         0x00
+    #define BMI270_range_2000        0x01
     
 //ACCEL AND GYRO CONFIGURATION 
 //(gyr_range) and (acc_range)
-  #define ODR_0p78Hz        0x01
-  #define ODR_1p5Hz         0x02  
-  #define ODR_3p1Hz         0x03  
-  #define ODR_6p25Hz        0x04
-  #define ODR_12p5Hz        0x05
-  #define ODR_25Hz          0x06
-  #define ODR_50Hz          0x07
-  #define ODR_100Hz         0x08
-  #define ODR_200Hz         0x09  
-  #define ODR_400Hz         0x0A
-  #define ODR_800Hz         0x0B  
-  #define ODR_1KHz          0x0C  
-  #define ODR_3K2Hz         0x0D  
-  #define ODR_6K4Hz         0x0E  
-  #define ODR_12K8Hz        0x0F  
-
-
+  #define BMI270_ODR_0p78Hz        0x01
+  #define BMI270_ODR_1p5Hz         0x02  
+  #define BMI270_ODR_3p1Hz         0x03  
+  #define BMI270_ODR_6p25Hz        0x04
+  #define BMI270_ODR_12p5Hz        0x05
+  #define BMI270_ODR_25Hz          0x06
+  #define BMI270_ODR_50Hz          0x07
+  #define BMI270_ODR_100Hz         0x08
+  #define BMI270_ODR_200Hz         0x09  
+  #define BMI270_ODR_400Hz         0x0A
+  #define BMI270_ODR_800Hz         0x0B  
+  #define BMI270_ODR_1KHz          0x0C  
+  #define BMI270_ODR_3K2Hz         0x0D  
+  #define BMI270_ODR_6K4Hz         0x0E  
+  #define BMI270_ODR_12K8Hz        0x0F  
 
 class BMI270
 {
@@ -180,7 +178,7 @@ class BMI270
   uint8_t getStatus();
   void resetBMI270();
   void initBMI270(uint8_t Ascale, uint8_t ODR, uint8_t Accel_OSR, uint8_t acc_filter, uint8_t gyr_bwp, uint8_t gyr_noise_perf, uint8_t gyr_filter_perf, uint8_t ois_range);
-  void readBMI270Data(int16_t &XData16, int16_t &YData16, int16_t &ZData16);
+  void readBMI270Data(int16_t *BMI270_Data);
  // void CompensationBMA400(uint8_t Ascale, uint8_t SR, uint8_t power_Mode, uint8_t OSR, uint8_t acc_filter, float * offset);
  // void selfTestBMA400();
  // void SetWakeupInterruption();
@@ -200,10 +198,6 @@ class BMI270
   void SPIwriteBits(byte regAddress, byte bitStart, byte length1, byte data);
   void SPIwriteBit(byte regAddress, byte bitNum, byte data);
  
-
-
-
-
   private:
   uint8_t _intPin1;
   uint8_t _intPin2;

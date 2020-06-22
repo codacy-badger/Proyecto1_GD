@@ -100,14 +100,14 @@ void BMA400::SetAutolowpowertimeout(uint16_t time_code) {
   //SPIwriteOneRegister(BMA400_AUTOWAKEUP_1, 0x03);                 // Enable interrupt for auto wake up interrupt
 }
 
-void BMA400::SetWakeupInterruption() {
+void BMA400::SetWakeupInterruption(byte threshold) {
   SPIwriteOneRegister(BMA400_AUTOLOWPOW_1, 0x02);             // switch to low power when GEN1 interrupt triggered
   SPIwriteOneRegister(BMA400_AUTOWAKEUP_1, 0x02);             // enable interrupt for auto wake up interrupt
   // Enable interrupt on all three axes (bits 5 - 7)for auto wake up
   // Use 4 samples (n + 1) for wakeup condition (bits 4 - 2), 4 samples = 160 ms at 25 Hz
   // Reference updated whenever going into low power mode (bits 1, 0)
   SPIwriteOneRegister(BMA400_WKUP_INT_CONFIG0,0x07 << 5 | 0x03 << 2 | 0x01);
-  SPIwriteOneRegister(BMA400_WKUP_INT_CONFIG1, 0x08); //  50 mg threshold for wake on any axis, n x 6.25 mgs at 2 g FS
+  SPIwriteOneRegister(BMA400_WKUP_INT_CONFIG1, threshold); //  50 mg threshold for wake on any axis, n x 6.25 mgs at 2 g FS
    /* Interrupt configuration */
   // Map interrupts and set interrupt behavior
   SPIwriteOneRegister(BMA400_INT1_MAP, 0x01);              // map WKUP interrupt to INT1 (bit 0)

@@ -10,11 +10,12 @@
 */ 
 #define interruptPin P2_5 
 //Accel configuration
-uint8_t Ascale = AFS_2G, ODR = ODR_200Hz, OSR = norm_avg4, acc_filter = acc_filt_hp;
+uint8_t BMI270_Ascale = BMI270_AFS_16G, BMI270_ODR = BMI270_ODR_200Hz, BMI270_OSR = BMI270_norm_avg4, BMI270_acc_filter = BMI270_acc_filt_hp;
 //Gyro configuration
-uint8_t gyr_bwp = norm , gyr_noise_perf = gyr_noise_hp, gyr_filter_perf = gyr_filter_hp, ois_range=range_2000;
+uint8_t BMI270_gyr_bwp = BMI270_norm , BMI270_gyr_noise_perf = BMI270_gyr_noise_hp, BMI270_gyr_filter_perf = BMI270_gyr_filter_hp, BMI270_ois_range=BMI270_range_2000;
+
 //Program variables
-int16_t ax, ay, az;       // variables to hold latest sensor data values 
+int16_t BMI270_Data[6];   // variables to hold BMI270 sensor data values
 BMI270 BMI270;            //Define BMI270 object
 
 void setup()
@@ -22,8 +23,10 @@ void setup()
   /* Enable USB UART */
   Serial.begin(9600);  
   /*Begin BMI270*/
-  BMI270.begin(P2_0);
-  delay(1000);
+  BMI270.begin(P2_1);
+  BMI270.initBMI270(BMI270_Ascale,BMI270_ODR,BMI270_OSR,BMI270_acc_filter,BMI270_gyr_bwp,BMI270_gyr_noise_perf,BMI270_gyr_filter_perf,BMI270_ois_range);
+
+  delay(3000);
   //BMI270.resetBMI270();
   // Read the BMI270 Chip ID register, in order to test of communication
   Serial.println("BMI270 IMU...");
@@ -34,7 +37,7 @@ void setup()
   if(c == 0x24) // check if all I2C sensors with WHO_AM_I have acknowledged
   {
    Serial.println("BMI270 is online...");       
-   BMI270.initBMI270(Ascale,ODR,OSR,acc_filter,gyr_bwp,gyr_noise_perf,gyr_filter_perf,ois_range);
+//      BMI270.initBMI270(BMI270_Ascale,BMI270_ODR,BMI270_OSR,BMI270_acc_filter,BMI270_gyr_bwp,BMI270_gyr_noise_perf,BMI270_gyr_filter_perf,BMI270_ois_range);
   }
   else 
   {
@@ -43,8 +46,14 @@ void setup()
 }
 
 void loop() { 
-// byte a = BMI270.getStatus();
-//Serial.println(a);
- BMI270.readBMI270Data(ax,ay,az);
- Serial.print(ax);Serial.print(",");Serial.print(ay);Serial.print(",");Serial.println(az);
+  byte a = BMI270.getStatus();
+     //if (a==1){
+  BMI270.readBMI270Data(BMI270_Data);
+  Serial.print(BMI270_Data[0]);Serial.print(",");Serial.print(BMI270_Data[1]);Serial.print(",");Serial.print(BMI270_Data[2]);
+  Serial.print(",");
+  Serial.print(BMI270_Data[3]);Serial.print(",");Serial.print(BMI270_Data[4]);Serial.print(",");Serial.println(BMI270_Data[5]);
+  //   }
+  //else{
+     Serial.println(a);
+  //  }
  }
