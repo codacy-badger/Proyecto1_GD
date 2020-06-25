@@ -7,7 +7,7 @@
  *************************************************************
  * EXAMPLE: SENDING BMA400 data to 54.200.157.213 Server 
  *************************************************************
- * HIVEMQ DATA:
+ * BROKER DATA:
  * Broker: 54.200.157.213
  * ClientID: terminal
  * User:get-test (Noavaiable)
